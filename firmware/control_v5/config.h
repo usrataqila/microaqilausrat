@@ -38,5 +38,6 @@
 #define DHT_FAIL_LIMIT    12      // ~30 s of failed reads -> blind, so all off
 
 // --- Wi-Fi AP ---
-#define AP_SSID           "microaqila"
-#define AP_PASS           "aqila1234"
+#define AP_SSID           "micro1"
+// WPA2 requires 8+ characters, so "micro1" alone is rejected by softAP().
+#define AP_PASS           "micro1234"
