@@ -341,3 +341,42 @@ Convention: **[M]** = measured fact, **[G]** = guess/assumption to verify.
 - Decision: keep the local AP web UI, not Blynk - no internet dependency at
   the AIUB demo, no account/cloud, already working, and it still satisfies
   the proposal's "Mobile IoT Interface".
+
+## 2026-08-29 session 6: adaptive firmware (control_v4)
+
+- Wrote `firmware/control_v4` - control_v3 plus the adaptive band, which is
+  the objective the project title is named after. Everything proven in
+  sessions 1-5 (pin map, relay polarity, screw map, safety chain) is
+  unchanged; only the band handling is new.
+- THE RULE, entire algorithm: every ADAPT_WINDOW_MS (60 s) count relay
+  switches since the last review. >= ADAPT_BUSY_SW (4) -> widen the band by
+  ADAPT_STEP_C (0.1); exactly 0 switches while both relays are idle ->
+  tighten by the same step. Clamped to [GAP_MIN_C 0.2, GAP_MAX_C 2.0].
+- Split base vs live band: `cfg.gap` is the base the user saves (EEPROM),
+  `gap` is the live one adaptation moves. FIXED mode snaps back to `cfg.gap`,
+  so it is a true control condition rather than a frozen adapted value.
+- FIXED mode still counts each window (it just never acts on the count) so
+  both modes are measured identically.
+- Added to the web UI: ADAPTIVE/FIXED buttons, live band readout, run-minutes,
+  and RESET COUNTERS for starting a clean timed run. OLED gained band + mode
+  + elapsed minutes. New endpoint `/api/reset`.
+- EEPROM_MAGIC bumped 0xA9C1 -> 0xA9C2 (Settings struct gained `adaptive`),
+  so a v3 EEPROM is rejected and defaults are rewritten on first v4 boot.
+- [M] Compiled 27% flash / 37% RAM. USER FLASHED IT PERSONALLY from Arduino
+  IDE 2.3.10 (sketchbook repointed to C:\Users\AUsrat\.arduino-user so the
+  IDE sees the libraries installed by arduino-cli). Upload ended in
+  "Hard resetting" = success.
+- [M] Serial verify after the user's own upload: banner control_v4, chip
+  0x006BE263, SSD1306 OK, AP 'microaqila' UP at 192.168.4.1, heap 46144,
+  "Loaded from EEPROM: target 35.0 base gap 0.5 mode ADAPTIVE", band 0.50
+  -> heat below 34.5 / fan above 35.5. Heater engaged correctly at 31.0 C.
+- [M] User then set target 30.0 from the phone; at 30.8 C the FAN engaged
+  (above 30.5) - both directions of the band now confirmed on hardware.
+  Heap 44624 with a web client attached.
+- Wrote `tools/run_log.py`: resets the board, captures a timed run, and
+  writes data/run_<MODE>_<mins>min_<stamp>.{log,csv} plus the summary line
+  (mode, duration, total switches, band start/end, temp range) that goes
+  into the report table. Verified end-to-end on a 30 s capture.
+- NEXT (objective 6, the Results section): two timed runs, same room, same
+  target, same base band - one FIXED, one ADAPTIVE - and compare total
+  switches. Nothing left to build; this is measurement, not code.
