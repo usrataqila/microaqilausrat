@@ -2,6 +2,12 @@
 Usage: python serial_read.py [COM6] [seconds] [baud]"""
 import sys, time, serial
 
+# Windows consoles default to cp1252; ESP boot ROM emits non-UTF8 garbage at reset.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 port = sys.argv[1] if len(sys.argv) > 1 else "COM6"
 secs = float(sys.argv[2]) if len(sys.argv) > 2 else 8
 baud = int(sys.argv[3]) if len(sys.argv) > 3 else 115200
