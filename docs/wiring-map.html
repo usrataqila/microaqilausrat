@@ -1,0 +1,485 @@
+<title>microaqila Wiring Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --ground:#f2f3f1;
+  --panel:#ffffff;
+  --panel-2:#f7f8f6;
+  --ink:#14171c;
+  --ink-2:#4a5158;
+  --ink-3:#7d858e;
+  --line:#d8dbd7;
+  --line-2:#c2c7c1;
+  --board:#fbfbf9;
+  --board-hole:#c9cec8;
+  --chip:#2b2f36;
+  --accent:#c2410c;
+  --pos:#c8322b;
+  --neg:#2159c4;
+  --ctrl:#c2740a;
+  --i2c:#6d3fc4;
+  --sense:#15803d;
+  --usb:#5a6672;
+  --focus:#c2410c;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#101317;
+    --panel:#171b21;
+    --panel-2:#1d222a;
+    --ink:#e9ecef;
+    --ink-2:#a8b1ba;
+    --ink-3:#79838d;
+    --line:#2a313a;
+    --line-2:#3a434e;
+    --board:#242a32;
+    --board-hole:#39424c;
+    --chip:#0d1014;
+    --accent:#fb923c;
+    --pos:#f0544c;
+    --neg:#5b91f5;
+    --ctrl:#f0a53a;
+    --i2c:#a583f0;
+    --sense:#4ade80;
+    --usb:#94a3b0;
+    --focus:#fb923c;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101317;
+  --panel:#171b21;
+  --panel-2:#1d222a;
+  --ink:#e9ecef;
+  --ink-2:#a8b1ba;
+  --ink-3:#79838d;
+  --line:#2a313a;
+  --line-2:#3a434e;
+  --board:#242a32;
+  --board-hole:#39424c;
+  --chip:#0d1014;
+  --accent:#fb923c;
+  --pos:#f0544c;
+  --neg:#5b91f5;
+  --ctrl:#f0a53a;
+  --i2c:#a583f0;
+  --sense:#4ade80;
+  --usb:#94a3b0;
+  --focus:#fb923c;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  line-height:1.5;
+  padding:24px 20px 48px;
+}
+.wrap{max-width:1180px;margin:0 auto}
+
+header{margin-bottom:20px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 6px;
+}
+h1{font-size:clamp(22px,3vw,30px);margin:0 0 6px;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
+.lede{margin:0;color:var(--ink-2);max-width:62ch;font-size:14.5px}
+
+.layout{display:grid;grid-template-columns:1fr 316px;gap:18px;align-items:start;margin-top:20px}
+@media (max-width:940px){.layout{grid-template-columns:1fr}}
+
+.stage{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:8px;overflow-x:auto;
+}
+svg.board{display:block;width:100%;height:auto;min-width:720px}
+
+/* ---- wires ---- */
+.wire{
+  fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:3.4;
+  cursor:pointer;transition:opacity .18s,stroke-width .18s;
+}
+.wire-hit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+.wire:focus-visible,.wire-hit:focus-visible{outline:none}
+g.conn:focus-visible .wire{stroke:var(--focus);stroke-width:5.5}
+.pos{stroke:var(--pos)} .neg{stroke:var(--neg)} .ctrl{stroke:var(--ctrl)}
+.i2c{stroke:var(--i2c)} .sense{stroke:var(--sense)} .usb{stroke:var(--usb)}
+svg.board.picked .conn .wire{opacity:.13}
+svg.board.picked .conn.on .wire{opacity:1;stroke-width:5.5}
+g.conn:hover .wire{stroke-width:5.5;opacity:1}
+
+/* ---- board furniture ---- */
+.body-fill{fill:var(--board);stroke:var(--line-2);stroke-width:1.5}
+.chip-fill{fill:var(--chip);stroke:var(--line-2);stroke-width:1.5}
+.pad{fill:var(--panel-2);stroke:var(--line-2);stroke-width:1}
+.lbl{font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;fill:var(--ink)}
+.lbl-sm{font-family:"IBM Plex Mono",monospace;font-size:8.5px;fill:var(--ink-2)}
+.lbl-w{font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;fill:#fff}
+.lbl-mut{font-family:"IBM Plex Sans",sans-serif;font-size:9.5px;fill:var(--ink-3);font-style:italic}
+
+/* ---- side panel ---- */
+.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.card h2{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 10px;font-weight:500;
+}
+#detail .empty{color:var(--ink-3);font-size:13.5px;margin:0}
+#detail .name{font-size:16px;font-weight:600;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.swatch{width:12px;height:12px;border-radius:3px;flex:none}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px}
+dt{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+   text-transform:uppercase;color:var(--ink-3);padding-top:2px}
+dd{margin:0;color:var(--ink)}
+dd code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  background:var(--panel-2);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+.why{margin:11px 0 0;padding-top:11px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--ink-2)}
+#clear{
+  margin-top:12px;width:100%;padding:8px;border:1px solid var(--line-2);
+  border-radius:8px;background:var(--panel-2);color:var(--ink-2);
+  font-family:inherit;font-size:12.5px;cursor:pointer;
+}
+#clear:hover{border-color:var(--accent);color:var(--accent)}
+#clear:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.grp{margin-bottom:12px}
+.grp:last-child{margin-bottom:0}
+.grp h3{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 5px;font-weight:500;
+  display:flex;align-items:center;gap:6px;
+}
+.grp h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.row{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:5px 7px;border:0;border-radius:6px;background:transparent;
+  color:var(--ink);font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+  cursor:pointer;transition:background .12s;
+}
+.row:hover{background:var(--panel-2)}
+.row:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.row.on{background:var(--panel-2);color:var(--accent);font-weight:600}
+.row .dot{width:8px;height:8px;border-radius:2px;flex:none}
+
+footer{margin-top:22px;font-size:12.5px;color:var(--ink-3);max-width:70ch}
+footer strong{color:var(--pos)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">EEE4103 capstone &middot; as built</p>
+  <h1>microaqila Wiring Map</h1>
+  <p class="lede">Every connection on the bench, laid out where the parts actually sit. Click any wire &mdash; or any line in the list &mdash; to isolate it and read what it carries.</p>
+</header>
+
+<div class="layout">
+  <div class="stage">
+  <svg class="board" id="board" viewBox="0 0 1060 668" role="img" aria-label="Wiring diagram of the microaqila temperature control system">
+    <defs>
+      <pattern id="holes" width="11" height="11" patternUnits="userSpaceOnUse">
+        <circle cx="5.5" cy="5.5" r="1.4" fill="var(--board-hole)"/>
+      </pattern>
+    </defs>
+
+    <!-- ============ BREADBOARD ============ -->
+    <rect x="392" y="92" width="332" height="448" rx="7" class="body-fill"/>
+    <rect x="420" y="112" width="276" height="408" fill="url(#holes)"/>
+    <!-- left rails -->
+    <line x1="402" y1="112" x2="402" y2="520" stroke="var(--pos)" stroke-width="2.2"/>
+    <line x1="412" y1="112" x2="412" y2="520" stroke="var(--neg)" stroke-width="2.2"/>
+    <!-- right rails -->
+    <line x1="704" y1="112" x2="704" y2="520" stroke="var(--pos)" stroke-width="2.2"/>
+    <line x1="714" y1="112" x2="714" y2="520" stroke="var(--neg)" stroke-width="2.2"/>
+    <!-- centre channels + seam -->
+    <line x1="478" y1="112" x2="478" y2="520" stroke="var(--line-2)" stroke-width="3"/>
+    <line x1="642" y1="112" x2="642" y2="520" stroke="var(--line-2)" stroke-width="3"/>
+    <line x1="558" y1="100" x2="558" y2="532" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="4 4"/>
+    <text x="558" y="556" class="lbl" text-anchor="middle">BREADBOARD &mdash; two joined</text>
+    <text x="558" y="570" class="lbl-mut" text-anchor="middle">ESP and OLED plug straight into it</text>
+
+    <!-- ============ ESP on the breadboard ============ -->
+    <rect x="440" y="292" width="80" height="200" rx="4" class="chip-fill"/>
+    <rect x="459" y="312" width="42" height="30" rx="2" fill="#8d8d72"/>
+    <text x="480" y="332" class="lbl-sm" text-anchor="middle" fill="#111">ESP-12F</text>
+    <text x="480" y="366" class="lbl-w" text-anchor="middle">NodeMCU</text>
+    <text x="480" y="380" class="lbl-sm" text-anchor="middle" fill="#c9ced4">ESP8266</text>
+    <rect x="466" y="470" width="28" height="12" rx="2" fill="#9aa0a6"/>
+    <!-- left header -->
+    <rect x="434" y="396" width="10" height="8" class="pad"/><text x="430" y="403" class="lbl-sm" text-anchor="end">VU</text>
+    <rect x="434" y="412" width="10" height="8" class="pad"/><text x="430" y="419" class="lbl-sm" text-anchor="end">3V</text>
+    <rect x="434" y="428" width="10" height="8" class="pad"/><text x="430" y="435" class="lbl-sm" text-anchor="end">G</text>
+    <!-- right header -->
+    <rect x="516" y="316" width="10" height="8" class="pad"/><text x="530" y="323" class="lbl-sm">D1</text>
+    <rect x="516" y="332" width="10" height="8" class="pad"/><text x="530" y="339" class="lbl-sm">D2</text>
+    <rect x="516" y="348" width="10" height="8" class="pad"/><text x="530" y="355" class="lbl-sm">D5</text>
+    <rect x="516" y="364" width="10" height="8" class="pad"/><text x="530" y="371" class="lbl-sm">D6</text>
+    <rect x="516" y="380" width="10" height="8" class="pad"/><text x="530" y="387" class="lbl-sm">D7</text>
+    <rect x="516" y="396" width="10" height="8" class="pad"/><text x="530" y="403" class="lbl-sm">3V</text>
+    <rect x="516" y="412" width="10" height="8" class="pad"/><text x="530" y="419" class="lbl-sm">G</text>
+
+    <!-- ============ OLED on the breadboard ============ -->
+    <rect x="600" y="126" width="88" height="60" rx="4" class="body-fill"/>
+    <rect x="612" y="140" width="66" height="32" rx="2" fill="#0f1622"/>
+    <text x="645" y="160" class="lbl-sm" text-anchor="middle" fill="#7fa3c4">128&times;64</text>
+    <text x="645" y="200" class="lbl" text-anchor="middle">OLED SSD1306</text>
+    <text x="645" y="212" class="lbl-mut" text-anchor="middle">I&sup2;C 0x3C</text>
+    <rect x="595" y="138" width="9" height="7" class="pad"/><text x="591" y="144" class="lbl-sm" text-anchor="end">GND</text>
+    <rect x="595" y="150" width="9" height="7" class="pad"/><text x="591" y="156" class="lbl-sm" text-anchor="end">VCC</text>
+    <rect x="595" y="162" width="9" height="7" class="pad"/><text x="591" y="168" class="lbl-sm" text-anchor="end">SCL</text>
+    <rect x="595" y="174" width="9" height="7" class="pad"/><text x="591" y="180" class="lbl-sm" text-anchor="end">SDA</text>
+
+    <!-- ============ RELAY MODULE ============ -->
+    <rect x="186" y="164" width="150" height="304" rx="6" class="body-fill"/>
+    <text x="261" y="186" class="lbl" text-anchor="middle">2-CH RELAY</text>
+    <text x="261" y="199" class="lbl-mut" text-anchor="middle">LOW-trigger, opto-isolated</text>
+    <rect x="200" y="212" width="122" height="90" rx="4" fill="var(--panel-2)" stroke="var(--line)"/>
+    <text x="261" y="230" class="lbl" text-anchor="middle">K1 &mdash; BULB</text>
+    <rect x="187" y="242" width="14" height="12" class="pad"/><text x="207" y="252" class="lbl-sm">1 &middot; NC unused</text>
+    <rect x="187" y="262" width="14" height="12" class="pad"/><text x="207" y="272" class="lbl-sm">2 &middot; COM</text>
+    <rect x="187" y="282" width="14" height="12" class="pad"/><text x="207" y="292" class="lbl-sm">3 &middot; NO</text>
+    <rect x="200" y="330" width="122" height="90" rx="4" fill="var(--panel-2)" stroke="var(--line)"/>
+    <text x="261" y="348" class="lbl" text-anchor="middle">K2 &mdash; FAN</text>
+    <rect x="187" y="360" width="14" height="12" class="pad"/><text x="207" y="370" class="lbl-sm">1 &middot; NO</text>
+    <rect x="187" y="380" width="14" height="12" class="pad"/><text x="207" y="390" class="lbl-sm">2 &middot; COM</text>
+    <rect x="187" y="400" width="14" height="12" class="pad"/><text x="207" y="410" class="lbl-sm">3 &middot; NC unused</text>
+    <text x="261" y="444" class="lbl-mut" text-anchor="middle">pin side faces the breadboard &rarr;</text>
+    <!-- J1 / J2 -->
+    <rect x="330" y="202" width="11" height="9" class="pad"/><text x="345" y="209" class="lbl-sm">RY-VCC</text>
+    <rect x="330" y="215" width="11" height="9" class="pad"/><text x="345" y="222" class="lbl-sm">VCC &middot; jumper off</text>
+    <rect x="330" y="228" width="11" height="9" class="pad"/><text x="345" y="235" class="lbl-sm">GND</text>
+    <rect x="330" y="370" width="11" height="9" class="pad"/><text x="345" y="377" class="lbl-sm">GND</text>
+    <rect x="330" y="383" width="11" height="9" class="pad"/><text x="345" y="390" class="lbl-sm">IN1</text>
+    <rect x="330" y="396" width="11" height="9" class="pad"/><text x="345" y="403" class="lbl-sm">IN2</text>
+    <rect x="330" y="409" width="11" height="9" class="pad"/><text x="345" y="416" class="lbl-sm">VCC</text>
+
+    <!-- ============ FAN ============ -->
+    <rect x="28" y="44" width="106" height="94" rx="6" class="body-fill"/>
+    <circle cx="81" cy="94" r="31" fill="none" stroke="var(--line-2)" stroke-width="1.5"/>
+    <circle cx="81" cy="94" r="9" fill="var(--line-2)"/>
+    <text x="81" y="62" class="lbl" text-anchor="middle">FAN</text>
+    <text x="81" y="130" class="lbl-sm" text-anchor="middle">12 V &middot; 0.25 A</text>
+
+    <!-- ============ BULB ============ -->
+    <rect x="28" y="186" width="106" height="94" rx="6" class="body-fill"/>
+    <circle cx="81" cy="228" r="21" fill="none" stroke="var(--line-2)" stroke-width="1.5"/>
+    <path d="M72 242 v10 h18 v-10" fill="none" stroke="var(--line-2)" stroke-width="1.5"/>
+    <path d="M72 224 l4.5 9 l4.5 -9 l4.5 9 l4.5 -9" fill="none" stroke="var(--ctrl)" stroke-width="1.8"/>
+    <text x="81" y="202" class="lbl" text-anchor="middle">BULB</text>
+    <text x="81" y="272" class="lbl-sm" text-anchor="middle">12 V &middot; 21 W</text>
+
+    <!-- ============ 12 V CHAIN ============ -->
+    <rect x="28" y="392" width="106" height="46" rx="5" class="body-fill"/>
+    <text x="81" y="411" class="lbl" text-anchor="middle">DC JACK</text>
+    <text x="81" y="426" class="lbl-sm" text-anchor="middle">screw + / &minus;</text>
+    <rect x="28" y="468" width="106" height="46" rx="5" class="body-fill"/>
+    <text x="81" y="487" class="lbl" text-anchor="middle">12 V BRICK</text>
+    <text x="81" y="502" class="lbl-sm" text-anchor="middle">5&ndash;7 A</text>
+    <rect x="28" y="544" width="106" height="46" rx="5" class="body-fill"/>
+    <text x="81" y="563" class="lbl" text-anchor="middle">MULTIPLUG</text>
+    <text x="81" y="578" class="lbl-sm" text-anchor="middle">220 V AC</text>
+
+    <!-- ============ DHT22 ============ -->
+    <rect x="826" y="140" width="112" height="86" rx="6" class="body-fill"/>
+    <rect x="840" y="160" width="30" height="44" rx="3" fill="var(--panel-2)" stroke="var(--line-2)"/>
+    <line x1="845" y1="170" x2="865" y2="170" stroke="var(--line-2)"/>
+    <line x1="845" y1="179" x2="865" y2="179" stroke="var(--line-2)"/>
+    <line x1="845" y1="188" x2="865" y2="188" stroke="var(--line-2)"/>
+    <text x="903" y="172" class="lbl" text-anchor="middle">DHT22</text>
+    <text x="903" y="188" class="lbl-sm" text-anchor="middle">temp +</text>
+    <text x="903" y="200" class="lbl-sm" text-anchor="middle">humidity</text>
+    <rect x="846" y="226" width="9" height="7" class="pad"/><text x="850" y="248" class="lbl-sm" text-anchor="middle">+</text>
+    <rect x="876" y="226" width="9" height="7" class="pad"/><text x="880" y="248" class="lbl-sm" text-anchor="middle">out</text>
+    <rect x="906" y="226" width="9" height="7" class="pad"/><text x="910" y="248" class="lbl-sm" text-anchor="middle">&minus;</text>
+
+    <!-- ============ LAPTOP ============ -->
+    <rect x="404" y="600" width="176" height="52" rx="5" class="body-fill"/>
+    <rect x="418" y="612" width="148" height="28" rx="2" fill="var(--chip)"/>
+    <text x="492" y="666" class="lbl" text-anchor="middle">LAPTOP &mdash; flashing &amp; serial monitor</text>
+
+    <!-- ================== WIRES ================== -->
+    <g id="wires">
+      <g class="conn" id="w-usb" tabindex="0" role="button" aria-label="USB cable, ESP to laptop">
+        <path class="wire-hit" d="M480 492 V600"/><path class="wire usb" d="M480 492 V600"/></g>
+
+      <g class="conn" id="w-12v-k1" tabindex="0" role="button" aria-label="12 volt positive to K1 common">
+        <path class="wire-hit" d="M134 404 H148 V268 H187"/><path class="wire pos" d="M134 404 H148 V268 H187"/></g>
+      <g class="conn" id="w-12v-k2" tabindex="0" role="button" aria-label="12 volt positive to K2 common">
+        <path class="wire-hit" d="M148 386 H187"/><path class="wire pos" d="M148 386 H187"/></g>
+      <circle cx="148" cy="386" r="4" fill="var(--pos)"/>
+      <g class="conn" id="w-k1-bulb" tabindex="0" role="button" aria-label="K1 normally open to bulb">
+        <path class="wire-hit" d="M187 288 H172 V240 H134"/><path class="wire pos" d="M187 288 H172 V240 H134"/></g>
+      <g class="conn" id="w-bulb-ret" tabindex="0" role="button" aria-label="Bulb return to 12 volt negative">
+        <path class="wire-hit" d="M40 280 V300 H12 V420 H28"/><path class="wire neg" d="M40 280 V300 H12 V420 H28"/></g>
+      <g class="conn" id="w-k2-fan" tabindex="0" role="button" aria-label="K2 normally open to fan">
+        <path class="wire-hit" d="M187 366 H160 V100 H134"/><path class="wire pos" d="M187 366 H160 V100 H134"/></g>
+      <g class="conn" id="w-fan-ret" tabindex="0" role="button" aria-label="Fan return to 12 volt negative">
+        <path class="wire-hit" d="M40 138 V150 H20 V430 H28"/>
+        <path class="wire neg" d="M40 138 V150 H20 V430 H28"/></g>
+      <g class="conn" id="w-brick" tabindex="0" role="button" aria-label="Jack to 12 volt brick">
+        <path class="wire-hit" d="M81 438 V468"/><path class="wire pos" d="M81 438 V468"/></g>
+      <g class="conn" id="w-mains" tabindex="0" role="button" aria-label="Brick to multiplug">
+        <path class="wire-hit" d="M81 514 V544"/><path class="wire usb" d="M81 514 V544"/></g>
+
+      <g class="conn" id="w-ryvcc" tabindex="0" role="button" aria-label="Relay coil supply to VU">
+        <path class="wire-hit" d="M341 206 H366 V400 H434"/><path class="wire ctrl" d="M341 206 H366 V400 H434"/></g>
+      <g class="conn" id="w-j1gnd" tabindex="0" role="button" aria-label="J1 ground to negative rail">
+        <path class="wire-hit" d="M341 232 H378 V300 H412"/><path class="wire ctrl" d="M341 232 H378 V300 H412"/></g>
+      <g class="conn" id="w-j2vcc" tabindex="0" role="button" aria-label="J2 VCC to positive rail">
+        <path class="wire-hit" d="M341 413 H390 V336 H402"/><path class="wire ctrl" d="M341 413 H390 V336 H402"/></g>
+      <g class="conn" id="w-j2gnd" tabindex="0" role="button" aria-label="J2 ground to negative rail">
+        <path class="wire-hit" d="M341 374 H366 V318 H412"/><path class="wire ctrl" d="M341 374 H366 V318 H412"/></g>
+      <g class="conn" id="w-in1" tabindex="0" role="button" aria-label="IN1 to D6">
+        <path class="wire-hit" d="M341 387 H352 V584 H588 V368 H526"/>
+        <path class="wire ctrl" d="M341 387 H352 V584 H588 V368 H526"/></g>
+      <g class="conn" id="w-in2" tabindex="0" role="button" aria-label="IN2 to D7">
+        <path class="wire-hit" d="M341 400 H344 V596 H606 V384 H526"/>
+        <path class="wire ctrl" d="M341 400 H344 V596 H606 V384 H526"/></g>
+
+      <g class="conn" id="w-scl" tabindex="0" role="button" aria-label="OLED SCL to D1">
+        <path class="wire-hit" d="M595 165 H570 V320 H526"/><path class="wire i2c" d="M595 165 H570 V320 H526"/></g>
+      <g class="conn" id="w-sda" tabindex="0" role="button" aria-label="OLED SDA to D2">
+        <path class="wire-hit" d="M595 177 H552 V336 H526"/><path class="wire i2c" d="M595 177 H552 V336 H526"/></g>
+      <g class="conn" id="w-oled-v" tabindex="0" role="button" aria-label="OLED VCC to positive rail">
+        <path class="wire-hit" d="M595 153 H430 V104 H402"/><path class="wire pos" d="M595 153 H430 V104 H402"/></g>
+      <g class="conn" id="w-oled-g" tabindex="0" role="button" aria-label="OLED GND to negative rail">
+        <path class="wire-hit" d="M595 141 H444 V120 H412"/><path class="wire neg" d="M595 141 H444 V120 H412"/></g>
+
+      <g class="conn" id="w-dht-out" tabindex="0" role="button" aria-label="DHT22 out to D5">
+        <path class="wire-hit" d="M880 233 V282 H760 V352 H526"/><path class="wire sense" d="M880 233 V282 H760 V352 H526"/></g>
+      <g class="conn" id="w-dht-p" tabindex="0" role="button" aria-label="DHT22 plus to 3 volt">
+        <path class="wire-hit" d="M850 233 V264 H788 V400 H526"/><path class="wire pos" d="M850 233 V264 H788 V400 H526"/></g>
+      <g class="conn" id="w-dht-n" tabindex="0" role="button" aria-label="DHT22 minus to ground">
+        <path class="wire-hit" d="M910 233 V300 H774 V416 H526"/><path class="wire neg" d="M910 233 V300 H774 V416 H526"/></g>
+
+      <g class="conn" id="w-rail-p" tabindex="0" role="button" aria-label="ESP 3 volt feeds positive rail">
+        <path class="wire-hit" d="M434 416 H402"/><path class="wire pos" d="M434 416 H402"/></g>
+      <g class="conn" id="w-rail-n" tabindex="0" role="button" aria-label="ESP ground feeds negative rail">
+        <path class="wire-hit" d="M434 432 H412"/><path class="wire neg" d="M434 432 H412"/></g>
+    </g>
+  </svg>
+  </div>
+
+  <aside class="side">
+    <div class="card" id="detail">
+      <h2>Connection</h2>
+      <p class="empty">Click a wire on the board, or pick one from the list below.</p>
+    </div>
+    <div class="card" id="list">
+      <h2>All connections</h2>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <strong>Note:</strong> the 3&nbsp;A fuse and the 105&nbsp;&deg;C thermal cutout are currently out of the circuit. Both belong in the K1 branch, in series between the jack and the bulb, and must go back before the bulb is run.
+</footer>
+</div>
+
+<script>
+const W = {
+  "w-usb":{n:"USB cable",g:"Power in",c:"usb",from:"NodeMCU micro-USB",to:"Laptop",car:"5 V power, flashing, serial monitor",
+    why:"The only link to the laptop. Once the code is flashed it lives in the ESP's flash forever, so any phone charger can replace this."},
+  "w-12v-k1":{n:"12 V + &rarr; K1 COM",g:"12 V power",c:"pos",from:"DC jack, + screw",to:"K1 screw 2 (COM)",car:"+12 V from the brick",
+    why:"Feeds the bulb channel. The relay contact decides whether it goes any further."},
+  "w-12v-k2":{n:"12 V + &rarr; K2 COM",g:"12 V power",c:"pos",from:"Same + screw (branched)",to:"K2 screw 2 (COM)",car:"+12 V from the brick",
+    why:"Both channels share one +12 V feed. The dot on the diagram is where it splits."},
+  "w-k1-bulb":{n:"K1 NO &rarr; bulb",g:"12 V power",c:"pos",from:"K1 screw 3 (NO)",to:"Bulb",car:"Switched +12 V, 1.75 A",
+    why:"Normally-open, so the bulb is dead unless the ESP energises K1. Crash, reset or power cut leaves it off."},
+  "w-bulb-ret":{n:"Bulb &rarr; 12 V &minus;",g:"12 V power",c:"neg",from:"Bulb",to:"DC jack, &minus; screw",car:"Return current",
+    why:"Completes the loop. Current that goes out through the relay has to come back here."},
+  "w-k2-fan":{n:"K2 NO &rarr; fan",g:"12 V power",c:"pos",from:"K2 screw 1 (NO)",to:"Fan, red lead",car:"Switched +12 V, 0.25 A",
+    why:"Same fail-safe arrangement as the bulb, on the second channel."},
+  "w-fan-ret":{n:"Fan &rarr; 12 V &minus;",g:"12 V power",c:"neg",from:"Fan, black lead",to:"DC jack, &minus; screw",car:"Return current",
+    why:"The fan's return, sharing the negative screw with the bulb."},
+  "w-brick":{n:"Jack &rarr; brick",g:"Power in",c:"pos",from:"DC jack barrel",to:"12 V brick plug",car:"12 V DC",
+    why:"Click-fit barrel connector. Centre-positive, confirmed when the fan first ran the right way."},
+  "w-mains":{n:"Brick &rarr; multiplug",g:"Power in",c:"usb",from:"12 V brick",to:"220 V multiplug",car:"220 V AC mains",
+    why:"The brick does two jobs: steps 220 V down to 12 V, and converts AC to DC."},
+  "w-ryvcc":{n:"RY-VCC &rarr; VU",g:"Relay control",c:"ctrl",from:"Relay J1 RY-VCC",to:"NodeMCU VU",car:"5 V for the relay coils",
+    why:"The coils are 5 V parts pulling ~140 mA together &mdash; far too thirsty for the 3.3 V regulator, so they come straight off USB 5 V."},
+  "w-j1gnd":{n:"J1 GND &rarr; &minus; rail",g:"Relay control",c:"ctrl",from:"Relay J1 GND",to:"Breadboard &minus; rail",car:"Coil return",
+    why:"The return path for the coil current."},
+  "w-j2vcc":{n:"J2 VCC &rarr; + rail",g:"Relay control",c:"ctrl",from:"Relay J2 VCC",to:"Breadboard + rail (3.3 V)",car:"3.3 V logic reference",
+    why:"The J1 jumper was removed so this side runs at 3.3 V. That makes the ESP's HIGH a true HIGH &mdash; at 5 V the relay might not release cleanly."},
+  "w-j2gnd":{n:"J2 GND &rarr; &minus; rail",g:"Relay control",c:"ctrl",from:"Relay J2 GND",to:"Breadboard &minus; rail",car:"Logic-side reference",
+    why:"The shared zero the IN1/IN2 signals are measured against."},
+  "w-in1":{n:"IN1 &rarr; D6",g:"Relay control",c:"ctrl",from:"Relay J2 IN1",to:"NodeMCU D6 (GPIO12)",car:"Command signal for K1 (bulb)",
+    why:"LOW switches the relay ON. D6 has no boot-strapping duty, so nothing clicks at power-up."},
+  "w-in2":{n:"IN2 &rarr; D7",g:"Relay control",c:"ctrl",from:"Relay J2 IN2",to:"NodeMCU D7 (GPIO13)",car:"Command signal for K2 (fan)",
+    why:"Same as IN1, on the fan channel."},
+  "w-scl":{n:"SCL &rarr; D1",g:"Display (I&sup2;C)",c:"i2c",from:"OLED SCL",to:"NodeMCU D1 (GPIO5)",car:"I&sup2;C clock",
+    why:"The metronome. Every tick means one bit is on the way. Not swappable with SDA."},
+  "w-sda":{n:"SDA &rarr; D2",g:"Display (I&sup2;C)",c:"i2c",from:"OLED SDA",to:"NodeMCU D2 (GPIO4)",car:"I&sup2;C data, both directions",
+    why:"Carries the actual bits. The OLED answers on this line too &mdash; that is how the scanner found address 0x3C."},
+  "w-oled-v":{n:"OLED VCC &rarr; + rail",g:"Display (I&sup2;C)",c:"pos",from:"OLED VCC",to:"Breadboard + rail (3.3 V)",car:"3.3 V power",
+    why:"3.3 V, not 5 V. The module's pull-ups sit at whatever VCC is, and those lines run straight into 3.3 V pins."},
+  "w-oled-g":{n:"OLED GND &rarr; &minus; rail",g:"Display (I&sup2;C)",c:"neg",from:"OLED GND",to:"Breadboard &minus; rail",car:"Return and reference",
+    why:"Two jobs at once: the return path, and the shared zero that makes 3.3 V mean something."},
+  "w-dht-out":{n:"DHT out &rarr; D5",g:"Sensor",c:"sense",from:"DHT22 out",to:"NodeMCU D5 (GPIO14)",car:"Temperature + humidity data",
+    why:"A single-wire protocol of its own &mdash; nothing to do with the I&sup2;C bus. The on-module pull-up is already fitted."},
+  "w-dht-p":{n:"DHT + &rarr; 3V",g:"Sensor",c:"pos",from:"DHT22 +",to:"NodeMCU 3V",car:"3.3 V power",
+    why:"The DHT22 runs on 3.3&ndash;6 V, so 3.3 V is comfortably in range."},
+  "w-dht-n":{n:"DHT &minus; &rarr; G",g:"Sensor",c:"neg",from:"DHT22 &minus;",to:"NodeMCU G",car:"Return and reference",
+    why:"Match by the printed label, not wire colour &mdash; the silkscreen is mirrored on the back of the module."},
+  "w-rail-p":{n:"3V &rarr; + rail",g:"Rails",c:"pos",from:"NodeMCU 3V",to:"Breadboard + rail",car:"3.3 V to everything on the rail",
+    why:"A rail is dead metal until you feed it. This wire is what makes the + rail live."},
+  "w-rail-n":{n:"G &rarr; &minus; rail",g:"Rails",c:"neg",from:"NodeMCU G",to:"Breadboard &minus; rail",car:"Shared ground",
+    why:"Turns one G pin into 25 sockets. Everything on the board measures its voltages against this."}
+};
+const ORDER=["Display (I&sup2;C)","Sensor","Relay control","Rails","12 V power","Power in"];
+const HUE={pos:"var(--pos)",neg:"var(--neg)",ctrl:"var(--ctrl)",i2c:"var(--i2c)",sense:"var(--sense)",usb:"var(--usb)"};
+
+const board=document.getElementById("board"),detail=document.getElementById("detail"),list=document.getElementById("list");
+let picked=null;
+
+ORDER.forEach(g=>{
+  const ids=Object.keys(W).filter(k=>W[k].g===g);
+  if(!ids.length)return;
+  const d=document.createElement("div");d.className="grp";
+  d.innerHTML=`<h3>${g}</h3>`;
+  ids.forEach(id=>{
+    const b=document.createElement("button");
+    b.className="row";b.dataset.id=id;b.type="button";
+    b.innerHTML=`<span class="dot" style="background:${HUE[W[id].c]}"></span><span>${W[id].n}</span>`;
+    b.addEventListener("click",()=>pick(id));
+    d.appendChild(b);
+  });
+  list.appendChild(d);
+});
+
+function pick(id){
+  if(picked===id){clear();return;}
+  picked=id;const w=W[id];
+  board.classList.add("picked");
+  document.querySelectorAll("#wires .conn").forEach(e=>e.classList.toggle("on",e.id===id));
+  document.querySelectorAll(".row").forEach(e=>e.classList.toggle("on",e.dataset.id===id));
+  detail.innerHTML=`<h2>Connection</h2>
+    <p class="name"><span class="swatch" style="background:${HUE[w.c]}"></span>${w.n}</p>
+    <dl>
+      <dt>From</dt><dd>${w.from}</dd>
+      <dt>To</dt><dd>${w.to}</dd>
+      <dt>Carries</dt><dd>${w.car}</dd>
+    </dl>
+    <p class="why">${w.why}</p>
+    <button id="clear" type="button">Show all wires</button>`;
+  document.getElementById("clear").addEventListener("click",clear);
+}
+function clear(){
+  picked=null;board.classList.remove("picked");
+  document.querySelectorAll("#wires .conn,.row").forEach(e=>e.classList.remove("on"));
+  detail.innerHTML=`<h2>Connection</h2><p class="empty">Click a wire on the board, or pick one from the list below.</p>`;
+}
+document.querySelectorAll("#wires .conn").forEach(g=>{
+  g.addEventListener("click",()=>pick(g.id));
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(g.id);}});
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")clear();});
+</script>
