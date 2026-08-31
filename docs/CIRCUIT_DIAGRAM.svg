@@ -115,8 +115,8 @@
 <!-- ================= OLED ================= -->
 <rect x="1055" y="110" width="170" height="108" rx="6" class="box"/>
 <rect x="1072" y="142" width="136" height="58" rx="3" fill="#0f1622" stroke="#444"/>
-<text x="1140" y="132" class="t" text-anchor="middle">OLED SSD1306</text>
-<text x="1140" y="177" class="s" fill="#8ab" text-anchor="middle">128 × 64 · I²C 0x3C</text>
+<text x="1140" y="132" class="t" text-anchor="middle">OLED SCREEN</text>
+<text x="1140" y="177" class="s" fill="#8ab" text-anchor="middle">SSD1306 · 128×64 · 0x3C</text>
 <text x="1064" y="236" class="p">GND</text><text x="1105" y="236" class="p">VCC</text>
 <text x="1146" y="236" class="p">SCL</text><text x="1186" y="236" class="p">SDA</text>
 
@@ -125,9 +125,9 @@
 <rect x="1074" y="346" width="44" height="54" rx="4" fill="#f5f5f5" stroke="#555"/>
 <line x1="1081" y1="357" x2="1111" y2="357" stroke="#888"/><line x1="1081" y1="367" x2="1111" y2="367" stroke="#888"/>
 <line x1="1081" y1="377" x2="1111" y2="377" stroke="#888"/><line x1="1081" y1="387" x2="1111" y2="387" stroke="#888"/>
-<text x="1172" y="362" class="t" text-anchor="middle">DHT22</text>
-<text x="1172" y="381" class="s" text-anchor="middle">temperature</text>
-<text x="1172" y="396" class="s" text-anchor="middle">+ humidity</text>
+<text x="1172" y="360" class="t" text-anchor="middle">TEMP SENSOR</text>
+<text x="1172" y="379" class="s" text-anchor="middle">DHT22</text>
+<text x="1172" y="394" class="s" text-anchor="middle">temp + humidity</text>
 <text x="1066" y="443" class="p">+</text><text x="1100" y="443" class="p">out</text><text x="1145" y="443" class="p">−</text>
 
 <!-- ================= 12 V WIRING ================= -->
