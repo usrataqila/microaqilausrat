@@ -193,21 +193,6 @@
 <polyline points="1148,448 1148,640 916,640 916,610 860,610" class="c" stroke="#2b2b2b"/>
 <text x="944" y="634" class="p">− → G</text>
 
-<!-- ================= NOTES ================= -->
-<rect x="985" y="676" width="405" height="252" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
-<text x="1003" y="700" class="t">Notes</text>
-<text x="1003" y="724" class="s">• Relays are LOW-trigger — GPIO LOW switches the relay ON.</text>
-<text x="1003" y="746" class="s">• Both loads sit on NO contacts, so a reset, crash or power</text>
-<text x="1003" y="762" class="s">   cut leaves the fan and bulb OFF. Fail-safe by construction.</text>
-<text x="1003" y="784" class="s">• J1 jumper REMOVED — split supply: coils from VU (5 V),</text>
-<text x="1003" y="800" class="s">   opto input side from 3V, matching the ESP's 3.3 V logic.</text>
-<text x="1003" y="822" class="s">• D3 / D4 / D8 deliberately avoided — boot-strapping pins.</text>
-<text x="1003" y="844" class="s">• The 12 V side never touches the ESP. The only connection</text>
-<text x="1003" y="860" class="s">   is the relay contact, which is mechanically isolated.</text>
-<text x="1003" y="886" class="s" fill="#a11">• 3 A fuse and 105 °C thermal cutout have been REMOVED.</text>
-<text x="1003" y="902" class="s" fill="#a11">   Both must be refitted in the K1 branch before the bulb</text>
-<text x="1003" y="918" class="s" fill="#a11">   is run.</text>
-
 <!-- ================= LEGEND ================= -->
 <line x1="300" y1="946" x2="336" y2="946" class="w" stroke="#d22"/><text x="343" y="950" class="s">12 V +</text>
 <line x1="410" y1="946" x2="446" y2="946" class="w" stroke="#2255cc"/><text x="453" y="950" class="s">12 V −</text>
